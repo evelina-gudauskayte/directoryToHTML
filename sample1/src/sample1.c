@@ -12,12 +12,10 @@
 #include <stdlib.h>
 #include <dirent.h>
 //#include "html.h"
-//1
-
-int main(void) {
+int main(int argc, char* argv[]) {
 	DIR *dir;
 	struct dirent *ent;
-	if ((dir = opendir ("//home//evelina//")) != NULL) {
+	if ((dir = opendir (argv[1])) != NULL) {
 	  while ((ent = readdir (dir)) != NULL) {
 	    printf ("%s\n", ent->d_name);
 	  }
