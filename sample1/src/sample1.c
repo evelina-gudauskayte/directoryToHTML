@@ -11,19 +11,19 @@ int main(int argc, char* argv[]) {
 	if ((dir = opendir (argv[1])) != NULL) {
 
 		FILE * html;
-		html = fopen("html.txt","w");
-		//htmlBEGIN(html);
-		//htmlHEAD( html, argv[1]);
+		html = fopen("html","w");
+		htmlBEGIN(html);
+		htmlHEAD( html, argv[1]);
 		while ((ent = readdir (dir)) != NULL) {
 			if((*argv[2])!='1'){
 				if((ent->d_name)[0] != '.'){ //without hidden files
-					fprintf (html, "%s\n", ent->d_name);
+					htmlTEXT (html,ent->d_name);
 				}
 			}else{
 				fprintf (html, "%s\n", ent->d_name); //with hidden files
 			}
 	  }
-
+		htmlEND(html);
 		closedir (dir);
 		fclose(html);
 
