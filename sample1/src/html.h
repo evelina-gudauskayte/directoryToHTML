@@ -9,8 +9,9 @@
 #ifndef HTML_H_
 #define HTML_H_
 
-/*void htmlHEAD(FILE* list, char* Title);
-void htmlBEGIN(FILE* list);
-void htmlEND(FILE* list);
-*/
+void htmlHEAD(FILE* , char*);
+void htmlBEGIN(FILE*);
+void htmlEND(FILE*);
+void htmlTEXT(FILE* , char*);
+
 #endif /* HTML_H_ */
