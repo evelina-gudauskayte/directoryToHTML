@@ -44,7 +44,7 @@ int main(int argc , char *argv[]){
 
     puts("Waiting for incoming connections...");
 
-    flag=1;
+   // flag=1;
 	c = sizeof(struct sockaddr_in);
 
 	while(flag!=0){

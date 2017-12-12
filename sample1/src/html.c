@@ -28,7 +28,6 @@ void SendHTMLtext(SOCKET socket,char* text){
 }
 
 void SendHTMLstyle( SOCKET socket){
-	//send(socket, "<style> p{padding: 5px 10px; background: #f5f5f5; border-left: 2px solid #216E36;}h1 {border: 4px solid green; background: #f5f5f5; border-radius: 5px; text-align: center}.special::before {content: \"directory >\"; color: red;}</style>",323,0);
 	send(socket, "<style> \n", 9,0);
 	send(socket, "p{padding: 5px 10px; \n background: #f5f5f5; \n border-left: 2px solid #216E36;}\n", 79, 0 );
 	send(socket, "h1 {border: 4px solid green; \n background: #f5f5f5; \n border-radius: 5px; \n text-align: center} \n", 97,0 );
@@ -42,7 +41,6 @@ void SendHTML(char* directory, SOCKET socket){
 	int check1dot,check2dot;
 		if ((dir = opendir (directory)) != NULL) {
 		SendHTMLbegin(socket);
-		//send(socket, "<head> <h1>HEAD</h1></head>",27,0);
 		SendHTMLhead(socket,directory);
 		SendHTMLstyle(socket);
 
