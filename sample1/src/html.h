@@ -1,17 +1,16 @@
-/*
- * html.h
- *
- *  Created on: 14.11.2017
- *      Author: evelina
- */
 #include <stdio.h>
 #include <string.h>
+#include <dirent.h>
+#define BUFLEN 1024
 #ifndef HTML_H_
 #define HTML_H_
 
-void htmlHEAD(FILE* , char*);
-void htmlBEGIN(FILE*);
-void htmlEND(FILE*);
-void htmlTEXT(FILE* , char*);
+void SendHTML(char* directory,SOCKET socket);
+void SendHTMLstyle(SOCKET socket);
+void SendHTMLtext(SOCKET socket,char* text);
+void SendHTMLhead(SOCKET socket,char* title);
+void SendHTMLend(SOCKET socket);
+void SendHTMLbegin(SOCKET socket);
+char* getPath(char buf[BUFLEN]);
 
 #endif /* HTML_H_ */
