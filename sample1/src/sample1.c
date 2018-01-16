@@ -44,19 +44,20 @@ int main(int argc , char *argv[]){
 
     puts("Waiting for incoming connections...");
 
-   // flag=1;
+    flag=1;
 	c = sizeof(struct sockaddr_in);
 
 	while(flag!=0){
+
 		newSocket = accept(s , (struct sockaddr *)&client, &c);
 		if (newSocket == INVALID_SOCKET){
 			printf("accept failed with error code : %d" , WSAGetLastError());
 		}
 		puts("Connection accepted");
-		message = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n";
+		message = "HTTP/1.1 200 OK\r\nContent-Type: text/html;\r\n\r\n";
 
     	nam = recv(newSocket, recvbuf, BUFLEN, 0);
-    	printf("%d\n",nam);
+    	//printf("%d\n",nam);
     	char* path = getPath(recvbuf);
     	if (path == NULL){
     		send(newSocket,message,strlen(message),0);
@@ -65,13 +66,13 @@ int main(int argc , char *argv[]){
 			if((flag = strcmp(path, "exit"))==0){
 				break;
 			}
-			/*printf("PATH:%s\n",path);
-			printf(recvbuf);*/
+			/*printf("PATH:%s\n",path);*/
+			printf(recvbuf);
 			send(newSocket,message,strlen(message),0);
 			SendHTML(path,newSocket);
 			free(path);
     		}
-    	printf("%d\n",flag);
+    	//printf("%d\n",flag);
     }
 
     puts("EXIT");
