@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
-#define BUFLEN 1024
+#define BUFLEN 2048
+#define PORT 8888
 #ifndef HTML_H_
 #define HTML_H_
 
 void SendHTML(char* directory,SOCKET socket);
-void SendHTMLstyle(SOCKET socket);
-void SendHTMLtext(SOCKET socket,char* text);
-void SendHTMLhead(SOCKET socket,char* title);
-void SendHTMLend(SOCKET socket);
-void SendHTMLbegin(SOCKET socket);
-char* getPath(char buf[BUFLEN]);
+void SendHTMLstyle( char* message);
+void SendHTMLtext( char* message,char* text);
+void SendHTMLhead( char* message,char* title);
+void SendHTMLend( char* message);
+void SendHTMLbegin( char* message);
+char* getPath(char* buf);
 
 #endif /* HTML_H_ */

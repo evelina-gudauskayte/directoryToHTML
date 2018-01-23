@@ -5,61 +5,68 @@
 #include <malloc.h>
 #include <winsock2.h>
 #include "html.h"
-#define BUFLEN 1024
 
-void SendHTMLbegin( SOCKET socket){
-	send(socket,"<!DOCKTYPE html> <html>",23,0);
+
+void SendHTMLbegin( char* message){
+	strcat(message,"<!DOCKTYPE html> <html>");
 }
 
-void SendHTMLend(SOCKET socket){
-	send(socket,"</html>",7,0);
+void SendHTMLend(char* message){
+	strcat(message,"</html>");
 }
 
-void SendHTMLhead(SOCKET socket,char* title){
-	send(socket,"<head><h1>",10,0);
-	send(socket,title,strlen(title),0);
-	send(socket,"</h1></head>",12,0);
+void SendHTMLhead(char* message,char* title){
+	strcat(message,"<head><h1>");
+	strcat(message,title);
+	strcat(message,"</h1></head>");
 }
 
-void SendHTMLtext(SOCKET socket,char* text){
-	send(socket,"<p>",3,0);
-	send(socket,text,strlen(text),0);
-	send(socket,"</p>\n",5,0);
+void SendHTMLtext(char* message,char* text){
+	strcat(message,"<p>");
+	strcat(message,text);
+	strcat(message,"</p>\n");
 }
 
-void SendHTMLstyle( SOCKET socket){
-	send(socket, "<style> \n", 9,0);
-	send(socket, "p{padding: 5px 10px; \n background: #f5f5f5; \n border-left: 2px solid #216E36;}\n", 79, 0 );
-	send(socket, "h1 {border: 4px solid green; \n background: #f5f5f5; \n border-radius: 5px; \n text-align: center} \n", 97,0 );
-	send(socket,".special::before {content: \"directory >\"; \n color: red; \n }\n",62,0);
-	send(socket, "</style> \n",10,0);
+void SendHTMLstyle( char* message){
+	strcat(message, "<style> \n");
+	strcat(message, "p{padding: 5px 10px; \n background: #f5f5f5; \n border-left: 2px solid #216E36;}\n");
+	strcat(message, "h1 {border: 4px solid green; \n background: #f5f5f5; \n border-radius: 5px; \n text-align: center} \n");
+	strcat(message,".special::before {content: \"directory >\"; \n color: red; \n }\n");
+	strcat(message, "</style> \n");
 }
 
 void SendHTML(char* directory, SOCKET socket){
+	char message[BUFLEN]="HTTP/1.1 200 OK\r\nContent-Type: text/html;\r\n\r\n";
+	//printf("done 1\n");
 	DIR *dir;
 	struct dirent *ent;
 	int check1dot,check2dot;
 		if ((dir = opendir (directory)) != NULL) {
-		SendHTMLbegin(socket);
-		SendHTMLhead(socket,directory);
-		SendHTMLstyle(socket);
+		SendHTMLbegin(message);
+		SendHTMLhead(message,directory);
+		SendHTMLstyle(message);
+
+		//char* bufToSend = (char*)malloc(BUFLEN*sizeof(char));
 
 		while ((ent = readdir (dir)) != NULL){
 			check1dot=strcmp(ent->d_name,".");
 			check2dot=strcmp(ent->d_name,"..");
 
 			if(check1dot!=0 && check2dot!=0 ){
-				SendHTMLtext(socket, ent->d_name);
+				SendHTMLtext(message, ent->d_name);
+				//printf("done %s\n",ent->d_name);
 			}
 		}
-		SendHTMLend(socket);
+		SendHTMLend(message);
+		//printf("done last\n");
 		closedir (dir);
+		send(socket,message,strlen(message),0);
+		printf("%s",message);
 	} else {
-	  send(socket,"\nWrong directory or wrong syntax: should be like: \"c:/folder\" OR \"c:\\\\folder\"\n or write \"path=exit\" to exit \n", 110, 0);
+	  send(socket,"HTTP/1.1 200 OK\r\nContent-Type: text/html;\r\n\r\n\nWrong directory or wrong syntax: should be like: \"c:/folder\" OR \"c:\\\\folder\"\n or write \"path=exit\" to exit \n", 155, 0);
 	}
-
 }
-char* getPath(char buf[BUFLEN]){
+char* getPath(char* buf){
 	char* path;
 	if(strstr(buf,"path=")==NULL || strstr(buf," HTTP")==NULL ){
 			return NULL;
