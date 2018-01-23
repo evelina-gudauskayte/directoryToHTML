@@ -43,37 +43,39 @@ int main(int argc , char *argv[]){
         printf("Bind failed with error code : %d" , WSAGetLastError());
     }
     puts("Bind done");
-    listen(s , 3); //слушаем только 1 клиента
+    listen(s , 3);
     puts("Waiting for incoming connections...");
 
     flag=1;
 	c = sizeof(struct sockaddr_in);
-
+	newSocket = accept(s , (struct sockaddr *)&client, &c);
 	while(flag!=0){
-		newSocket = accept(s , (struct sockaddr *)&client, &c);
+
 		if (newSocket == INVALID_SOCKET){
 			printf("accept failed with error code : %d" , WSAGetLastError());
 		}
 		puts("Connection accepted");
-		//message = "HTTP/1.1 200 OK\r\nContent-Type: text/html;\r\n\r\n";
 
     	nam = recv(newSocket, recvbuf, BUFLEN, 0);
-    	//printf("%d\n",nam);
+    	printf("Recieved %d bytes \n",nam);
     	char* path = getPath(recvbuf);
-    	printf("%s",path);
-    	if (path == NULL){
-    		send(newSocket,message,strlen(message),0);
-    		send(newSocket,"Write \"/?path=directory\"",24,0);
+    	//printf("%s",path);
+    	if(nam!=0){
+    		if (path == NULL){
+    		if (SOCKET_ERROR == send(newSocket,message,strlen(message),0)){
+    			printf("error\n");
+    		}
+    		if (SOCKET_ERROR == send(newSocket,"Write \"/?path=directory\"",24,0)){
+    			printf("error\n");
+    		}
     	}else{
 			if((flag = strcmp(path, "exit"))==0){
 				break;
 			}
-			//printf(recvbuf);
-			//send(newSocket,message,strlen(message),0);
 			SendHTML(path,newSocket);
 			free(path);
     		}
-    	//printf("%d\n",flag);
+    	}
     }
 
     puts("EXIT");

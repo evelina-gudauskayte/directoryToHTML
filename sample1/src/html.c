@@ -54,16 +54,17 @@ void SendHTML(char* directory, SOCKET socket){
 
 			if(check1dot!=0 && check2dot!=0 ){
 				SendHTMLtext(message, ent->d_name);
-				//printf("done %s\n",ent->d_name);
 			}
 		}
 		SendHTMLend(message);
-		//printf("done last\n");
 		closedir (dir);
-		send(socket,message,strlen(message),0);
-		printf("%s",message);
+		if (SOCKET_ERROR == send(socket,message,strlen(message),0)){
+			printf("Too many fles in a folder \n");
+		}
 	} else {
-	  send(socket,"HTTP/1.1 200 OK\r\nContent-Type: text/html;\r\n\r\n\nWrong directory or wrong syntax: should be like: \"c:/folder\" OR \"c:\\\\folder\"\n or write \"path=exit\" to exit \n", 155, 0);
+		if (SOCKET_ERROR == send(socket,"HTTP/1.1 200 OK\r\nContent-Type: text/html;\r\n\r\n\nWrong directory or wrong syntax: should be like: \"c:/folder\" OR \"c:\\\\folder\"\n or write \"path=exit\" to exit \n", 155, 0)){
+			printf("error\n");
+		}
 	}
 }
 char* getPath(char* buf){
